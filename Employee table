@@ -1,0 +1,34 @@
+create table Employee(
+	emp_id int primary key,
+	first_name varchar(10),
+	last_name varchar(10),
+	email varchar(30),
+	phone_no bigint,
+	hire_date date,
+	job_id varchar(20),
+	salary float,
+	commision_pct decimal(10,2),
+	manager_id int,
+	dep_id int
+	
+);
+
+INSERT INTO Employee VALUES (100, 'Steven', 'King', 'SKING', '5151234567', '1987-06-17', 'AD_PRES', 24000.00, 0.00, 0, 90);
+INSERT INTO Employee VALUES (101, 'Neena', 'Kochhar', 'NKOCHHAR', '5151234568', '1987-06-18', 'AD_VP', 17000.00, 0.00, 100, 90);
+INSERT INTO Employee VALUES (102, 'Lex', 'de haan', 'LDEHAAN', '5151234569', '1987-06-19', 'AD_VP', 17000.00, 0.00,100 , 90);
+INSERT INTO Employee VALUES (103, 'Alexander', 'hunold', 'AHUNOLD  ', '5154234567', '1987-06-20', 'IT_PROS', 9000.00, 0.00, 102, 60);
+INSERT INTO Employee VALUES (104, 'Bruce', 'ernst', 'BERNST', '5154234568', '1987-06-21', 'IT_PROG', 6000.00, 0.00, 103, 60);
+INSERT INTO Employee VALUES (105, 'DAVID', 'austin', 'DAUSTIN', '5154234569', '1987-06-22', 'IT_PROG', 4800.00, 0.00, 103, 60);
+INSERT INTO Employee VALUES (106, 'Valli', 'pataballa', 'VPATABAL ', '5154234560', '1987-06-22','IT_PROG',4800.00,0.00,103,60);
+
+select * from employee;
+
+select first_name,last_name from employee where salary>(select salary from employee where emp_id=105);
+
+select first_name,last_name,dep_id,job_id from employee where dep_id>(select dep_id from employee where emp_id=105);
+
+select first_name,last_name,dep_id from employee where salary=(select min(salary) from employee);
+
+select first_name,last_name,dep_id from employee where salary>(select avg(salary) from employee);
+
+select first_name,last_name,emp_id,salary from employee where manager_id=(select emp_id from employee where first_name='Steven');
