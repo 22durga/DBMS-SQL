@@ -1,0 +1,84 @@
+create table salesman
+(
+	sales_id int primary key,
+	name varchar(20),
+	city varchar(15),
+	commission decimal
+);
+
+insert into salesman values(5001,'James Hoog','New York',0.15);
+insert into salesman values(5002,'Nail Knite','Paris',0.13);
+insert into salesman values(5005,'Pit Alex','London',0.11);
+insert into salesman values(5006,'Mc Lyon','Paris',0.14);
+insert into salesman values(5007,'Paul Adam','Rome',0.13);
+insert into salesman values(5003,'Lauson Hen','San jose',0.12);
+
+select * from salesman;
+
+create table customer
+(
+	cus_id int primary key,
+	cus_name varchar(25),
+	city varchar(10),
+	grade int,
+	sales_id int references salesman(sales_id)
+);
+
+insert into customer values(3002,'Nick Rimando','New York',100,5001);
+insert into customer values(3007,'Brad Davis','New York',200,5001);
+insert into customer values(3005,'Graham Zusi','California',200,5002);
+insert into customer values(3008,'Julian Green','London',300,5002);
+insert into customer values(3004,'Fabian Johnson','Paris',300,5006);
+insert into customer values(3009,'Geoff Cameron','Berlin',200,5003);
+insert into customer values(3003,'Jozy Altidor','Moscow',200,5007);
+insert into customer values(3001,'Brad Guzan','London',NULL,5005);
+
+select * from customer;
+
+
+create table orders
+(
+	ord_no int primary key,
+	purch_amt decimal,
+	ord_date date,
+	cus_id int references customer(cus_id),
+	sales_id int references salesman(sales_id)
+);
+
+insert into orders values(70001,150.5,'2012-10-05',3005,5002);
+insert into orders values(70009,270.65,'2012-09-10',3001,5005);
+insert into orders values(70002,65.26,'2012-10-05',3002,5001);
+insert into orders values(70004,110.5,'2012-08-17',3009,5003);
+insert into orders values(70007,948.5,'2012-09-10',3005,5002);
+insert into orders values(70005,2400.6,'2012-07-27',3007,5001);
+insert into orders values(70008,5760,'2012-09-10',3002,5001);
+insert into orders values(70010,1983.43,'2012-10-10',3004,5006);
+insert into orders values(70003,2480.4,'2012-10-10',3009,5003);
+insert into orders values(70012,250.45,'2012-06-27',3008,5002);
+insert into orders values(70011,75.29,'2012-08-17',3003,5007);
+insert into orders values(70013,3045.6,'2012-04-25',3002,5001);
+
+select * from orders;
+
+select s.name, c.cus_name,c.city from salesman s join customer c on s.sales_id=c.sales_id where s.city=c.city;
+select salesman.name, customer.cus_name,customer.city from salesman, customer where salesman.city=customer.city;
+
+select c.cus_name,c.city,s.sales_id,s.commission from salesman s join customer c on s.sales_id=c.sales_id;
+
+select c.cus_name,c.city,s.name,s.commission from salesman s join customer c on s.sales_id=c.sales_id where s.commission>0.12;
+
+select c.cus_name,c.city,s.sales_id,s.city,s.commission from salesman s join customer c on s.sales_id=c.sales_id where s.city <> c.city and s.commission>0.12;
+
+SELECT o.ord_no,o.purch_amt,c.cus_name,c.city from customer c join orders o on c.cus_id=o.cus_id where o.purch_amt BETWEEN 500 AND 2000;
+
+select o.ord_no,o.ord_date,o.purch_amt,c.cus_name,c.grade,c.sales_id,s.commission from customer c join salesman s on s.sales_id=c.sales_id join orders o on c.cus_id=o.cus_id;
+
+select * from customer c natural join salesman s natural join orders o ;
+
+select c.cus_name,c.city,c.grade,s.sales_id,s.city from salesman s join customer c on s.sales_id=c.sales_id order by c.cus_id;
+
+select c.cus_name,c.city,c.grade,s.sales_id,s.city from salesman s join customer c on s.sales_id=c.sales_id where c.grade<300 order by c.cus_id ;
+
+select c.cus_name,c.city,o.ord_no,o.ord_date,o.purch_amt from customer c join orders o on c.cus_id=o.cus_id where c.cus_id=o.cus_id order by o.ord_date ;
+
+select c.cus_name,c.city,o.ord_no,o.ord_date,o.purch_amt,s.name,s.commission from salesman s join customer c on s.sales_id=c.sales_id join orders o on c.cus_id=o.cus_id where c.cus_id=o.cus_id OR s.sales_id=o.cus_id;
